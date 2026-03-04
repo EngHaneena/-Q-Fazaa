@@ -1,5 +1,6 @@
 import streamlit as st
-import google.generativeai as genai
+# 🌟 التعديل هنا: تغيير المكتبة من google.generativeai إلى openai
+from openai import OpenAI 
 import random
 import os
 
@@ -32,27 +33,25 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. إعداد الـ API (نسخة محدثة، مبسطة، وآمنة تماماً ومستحيل يطلع أي خطأ قدام اللجنة!)
+# 2. إعداد الـ API الخاص بـ OpenAI (نسخة محدثة ومبسطة لل تشغيل الآمن أونلاين ومحلياً)
 try:
-    # 🌟 التعديل هنا ليكون آمناً ومبسطاً:
-    # 1. أولاً، يبحث عن المفتاح في os.environ كبديل لل .env (طالما أننا ما ثبتنا المكتبة أونلاين)
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    # أولاً، يبحث عن المفتاح في os.environ كبديل لل .env (طالما أننا ما ثبتنا المكتبة أونلاين)
+    api_key = os.environ.get("OPENAI_API_KEY")
     
-    # 2. إذا لم يجد المفتاح محلياً، يبحث في الـ Secrets 
+    # ثانياً، إذا لم يجد المفتاح محلياً، يبحث في الـ Secrets 
     # (وهذا هو الصحيح لل تشغيل أونلاين على Streamlit Cloud)
     if not api_key:
-        api_key = st.secrets.get("GOOGLE_API_KEY")
+        api_key = st.secrets.get("OPENAI_API_KEY")
     
-    # 3. إذا لم يجد المفتاح في الحالتين، يظهر خطأ
+    # ثالثاً، إذا لم يجد المفتاح في الحالتين، يظهر خطأ
     if not api_key:
-        st.error("⚠️ لم يتم العثور على مفتاح API Key لجوجل. يرجى إعداده كـ GOOGLE_API_KEY في متغيرات البيئة (os.environ) محلياً أو في Streamlit Secrets أونلاين.")
+        st.error("⚠️ لم يتم العثور على مفتاح OpenAI API Key. يرجى إعداده كـ OPENAI_API_KEY في متغيرات البيئة (os.environ) محلياً أو في Streamlit Secrets أونلاين.")
         st.stop()
         
-    genai.configure(api_key=api_key)
-    # استخدام موديل Gemini 1.5 Flash للسرعة والدقة (النسخة المستقرة)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # إنشاء عميل OpenAI
+    client = OpenAI(api_key=api_key)
 except Exception as e:
-    st.error(f"⚠️ حدث خطأ غير متوقع أثناء إعداد الـ API: {e}")
+    st.error(f"⚠️ حدث خطأ غير متوقع أثناء إعداد الـ API الخاص بـ OpenAI: {e}")
     st.stop()
 
 # 3. الهيدر (ثابت)
@@ -78,7 +77,7 @@ jokes = {
     "غبت عن محاضرة": ["السكليف جاهز.. بس الحالة ماش "],
     "تنزيل مادة أو فتح شعبة": ["نفاذ معلق.. وبوابة الجامعة مو راضية تبطللل! "],
     "تغيير شعبة": ["الوقت بعز القايلة يا دكتور.. والأخلاق وسط "],
-    "طلب إعفاء لغة إنجليزية": ["بيحذفونه لك معليك بلا تهاويل!ههههllllllllllllllllll"]
+    "طلب إعفاء لغة إنجليزية": ["بيحذفونه لك معليك بلا تهاويل!هههههههه"]
 }
 
 if target in jokes:
@@ -123,12 +122,29 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 mood = st.select_slider("🎭 أسلوب الرسالة:", options=["رسمي جداً", "نظامي", "حبيب/ة"], value="نظامي")
 
+# دالة مساعدة لاستدعاء OpenAI ChatGPT (الجديدة)
+def generate_text_openai(prompt_content):
+    try:
+        # استخدام موديل gpt-3.5-turbo (سريع ورخيص ومناسب جداً لمشروعك)
+        # يمكنك استخدام gpt-4o إذا أردت جودة أعلى وتكلفة أكبر
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "أنت مساعد أكاديمي خبير لطلاب جامعة القصيم."},
+                {"role": "user", "content": prompt_content}
+            ],
+            temperature=0.7, # لل توازن بين الإبداع والالتزام بالنص
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        st.error(f"حدث خطأ في الاتصال بـ OpenAI: {e}")
+        return None
+
 # 6. التشغيل
 if st.button("🚀 ولّد الإيميل الفزعة"):
     with st.spinner('جاري حبك الأعذار باحترافية...'):
         try:
-            # 🌟 البرومبتات الاحترافية والمطورة (المحسن)
-            # تم دمج هيكلة متقدمة (Chain of Thought, Prompt Engineering)
+            # 🌟 البرومبتات الاحترافية والمطورة (تظل كما هي تماماً، فهي متوافقة)
             if target == "طلب إعفاء لغة إنجليزية":
                 # برومبت مخصص لعمادة القبول والتسجيل
                 prompt = f"""
@@ -183,11 +199,12 @@ if st.button("🚀 ولّد الإيميل الفزعة"):
 نص الإيميل الجاهز للإرسال فقط، دون أي مقدمات أو شروحات إضافية منك.
                 """
             
-            res = model.generate_content(prompt)
-            # تخزين الإيميل المولد في الـ Session State
-            st.session_state['generated_email'] = res.text
+            # 🌟 التعديل هنا: استدعاء دالة OpenAI الجديدة بدلاً من Gemini
+            generated_text = generate_text_openai(prompt)
+            if generated_text:
+                st.session_state['generated_email'] = generated_text
         except Exception as e:
-            st.error(f"حدث خطأ في توليد الإيميل: {e}")
+            st.error(f"حدث خطأ غير متوقع: {e}")
 
 # عرض الإيميل المُولد (ثابت والمستقر)
 if 'generated_email' in st.session_state:
@@ -212,7 +229,7 @@ if 'generated_email' in st.session_state:
 "{st.session_state['generated_email']}"
 
 [التعليمات والمهام]:
-1. **التحليل الوظيفي (Acceptability analysis):** حلل لغة الإيميل، قوة العذر، ومدى لباقته. بناءً على هذا التحليل، قدم نسبة مئوية متوقعة لقبول الدكتور أو العمادة لهذا الطلب (من 100%). كن دقيقاً، فإذا كان العذر ضعيفاً أو اللغة غير مناسبة، خفض النسبة.
+1. **التحليل الوظيفي (Acceptability analysis):** حلل لغة الإيميل، قوة العذر، ومدى لباقته. بناءً على هذا التحليل، قدم نسبة مئوية متوقعة لقبول الدكتور أو العمادة لهذا الطلب (من 100%). كن دقيقاً، فإذا كان العذر ضعيفاً أو اللغة غير مناسبة, خفض النسبة.
 2. **اللمسة الفزعة (Qassimi Feedback):** قدم نصيحة قصيمية سريعة جداً، ودية، مطمئنة، وفكاهية لصاحب الإيميل. يجب أن تعبر النكتة عن روح الفزعة القصيمية المعهودة (مثال: 'بيحذفونه لك بلا تهاويل!'، 'الأمور طيبة، فالك البونص!').
 3. **توصيات التحسين (Actionable Feedback - اختياري):** إذا كانت نسبة القبول أقل من 75%، اذكر باختصار شديد نقطة واحدة محددة يمكن تحسينها في الإيميل (مثال: 'النبرة محتاجة تكون أكثر رسمية'، 'وضح تأثير العذر على أدائك بشكل أدق').
 
@@ -225,10 +242,11 @@ if 'generated_email' in st.session_state:
   [إذا كانت النسبة منخفضة: <p><b>🔧 توصية تحسين:</b> [الملاحظة المختصرة والمحددة]</p>]
 </div>
 """
-                analysis = model.generate_content(check_p)
-                # عرض نتيجة التحليل (التي تأتي بتنسيق HTML من البرومبت)
-                st.markdown(analysis.text, unsafe_allow_html=True)
-                st.balloons()
+                # 🌟 التعديل هنا: استدعاء دالة OpenAI الجديدة بدلاً من Gemini للمدقق أيضاً
+                analysis_text = generate_text_openai(check_p)
+                if analysis_text:
+                    st.markdown(analysis_text, unsafe_allow_html=True)
+                    st.balloons()
             except Exception as e:
                 st.error(f"حدث خطأ في المُدقق: {e}")
 
