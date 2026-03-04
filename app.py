@@ -34,8 +34,7 @@ except:
     st.stop()
 
 # 3. الهيدر
-st.markdown('<div class="main-header"><h1>🎓 كيو فزعة | Q-Fazaa</h1><p>فزعتك بجيبك.. وإيميلك يخلص موضوعك ⚡</p></div>', unsafe_allow_html=True)
-
+st.markdown('<div class="main-header"><h1>🎓 كيو فزعة | Q-Fazaa</h1><p>فزعتك بيدك.. وإيميلك بثواني يجيك ⚡</p></div>', unsafe_allow_html=True)
 # 4. الأهداف 
 target_options = [
     "طلب بونص درجات", 
@@ -133,3 +132,4 @@ if 'generated_email' in st.session_state:
             st.balloons()
 
 st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px;">By Eng Haneen 1/2 | GDG Qassim 🚀</div>', unsafe_allow_html=True)
+
