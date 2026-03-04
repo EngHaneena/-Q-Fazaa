@@ -215,5 +215,6 @@ if 'generated_email' in st.session_state:
                 st.error(f"حدث خطأ في المُدقق: {e}")
 
 # الفوتر (تم تحديث التوقيع)
-st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px; font-family: \'Courier New\', Courier, monospace;">2\1 By Eng Haneen</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px; font-family: \'Courier New\', Courier, monospace;"> GDG Qassim 🚀 - By Eng Haneen</div>', unsafe_allow_html=True)
+
 
