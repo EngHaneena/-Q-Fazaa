@@ -37,13 +37,15 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 2. إعداد الـ API (تعديل هذا الجزء ليكون آمناً محلياً وأونلاين)
+# 2. إعداد الـ API (نسخة محدثة ومبسطة للتشغيل المحلي والآمن)
 try:
-    # محاولة الحصول على المفتاح من الـ Secrets أولاً (للتشغيل أونلاين على Streamlit Cloud)
-    api_key = st.secrets.get("GOOGLE_API_KEY")
+    # 🌟 التعديل هنا: محاولة تحميل من .env أولاً للتشغيل المحلي
+    # وإذا لم يجده (أونلاين)، يبحث في Secrets
+    api_key = os.environ.get("GOOGLE_API_KEY")
     
-    # إذا لم يجد المفتاح في الـ Secrets، يحاول قراءته من ملف الـ .env (للتشغيل محلياً على جهازك)
     if not api_key:
-        api_key = os.environ.get("GOOGLE_API_KEY")
+        # البحث في Secrets (لل تشغيل أونلاين على Streamlit Cloud)
+        api_key = st.secrets.get("GOOGLE_API_KEY")
     
     # إذا لم يجد المفتاح في الحالتين، يظهر خطأ
     if not api_key:
@@ -236,3 +238,4 @@ if 'generated_email' in st.session_state:
 
 # الفوتر والتوقيع (ثابت والمستقر)
 st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px; font-family: \'Courier New\', Courier, monospace;"> GDG Qassim 🚀 - By Eng Haneen</div>', unsafe_allow_html=True)
+
