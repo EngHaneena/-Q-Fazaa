@@ -5,7 +5,7 @@ import random
 # 1. إعدادات الصفحة والهوية البصرية
 st.set_page_config(page_title="Q-Fazaa | كيو فزعة", page_icon="🎓", layout="centered")
 
-# CSS متقدم (دعم الدارك مود والجماليات)
+# CSS المتقدم
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
@@ -36,18 +36,27 @@ except:
 # 3. الهيدر
 st.markdown('<div class="main-header"><h1>🎓 كيو فزعة | Q-Fazaa</h1><p>فزعتك بجيبك.. وإيميلك يخلص موضوعك ⚡</p></div>', unsafe_allow_html=True)
 
-# 4. الأهداف (تم تعديل "غبت" هنا)
-target = st.selectbox("🎯 وش هدفك من الإيميل؟", 
-                     ["طلب بونص درجات", "تحويل المحاضرة أونلاين", "تأخر عن محاضرة", "غبت عن محاضرة", "تنزيل مادة أو فتح شعبة", "تغيير شعبة"])
+# 4. الأهداف 
+target_options = [
+    "طلب بونص درجات", 
+    "تحويل المحاضرة أونلاين", 
+    "تأخر عن محاضرة", 
+    "غبت عن محاضرة", 
+    "تنزيل مادة أو فتح شعبة", 
+    "تغيير شعبة",
+    "طلب إعفاء لغة إنجليزية"
+]
+target = st.selectbox("🎯 وش هدفك من الإيميل؟", target_options)
 
-# قاموس الذبات (تم تعديل "غبت" هنا أيضاً)
+# قاموس الذبات (تمت إضافة ذبة زها)
 jokes = {
     "طلب بونص درجات": ["تكفى يا دكتور.. بمسك عيالك بس عطني هالعشر درجات هههههه"],
     "تحويل المحاضرة أونلاين": ["طريق المليداء اليوم يبي له سباحة مو سيارة.. خلوها عن بعد!"],
     "تأخر عن محاضرة": ["باص الجامعة قرر يسوي جولة سياحية بالقصيم قبل يجينا"],
     "غبت عن محاضرة": ["السكليف جاهز.. بس الأخلاق تبي بونص غياب"],
     "تنزيل مادة أو فتح شعبة": ["نفاذ معلق.. وبوابة الجامعة تذكرني بأيام الحصن"],
-    "تغيير شعبة": ["الوقت بعز القايلة يا دكتور.. والمخيخ يفصل عندي هههههه"]
+    "تغيير شعبة": ["الوقت بعز القايلة يا دكتور.. والمخيخ يفصل عندي هههههه"],
+    "طلب إعفاء لغة إنجليزية": ["بيحذفونه لك يا زها لا تخافين مانبي تهاويل! هههههههه"]
 }
 
 if target in jokes:
@@ -71,7 +80,7 @@ elif target == "تأخر عن محاضرة":
     with col1: bus = st.checkbox("الباص تأخر")
     with col2: traffic = st.checkbox("زحمة الطريق")
     reason_details = f"باص: {bus}, زحمة: {traffic}"
-elif target == "غبت عن محاضرة":  # تعديل الشرط هنا
+elif target == "غبت عن محاضرة":
     with col1: sick = st.checkbox("عندي سكليف")
     with col2: family = st.checkbox("ظرف عائلي")
     reason_details = f"مرض: {sick}, عائلي: {family}"
@@ -83,16 +92,24 @@ elif target == "تغيير شعبة":
     with col1: conflict = st.checkbox("تعارض مواد")
     with col2: qaila = st.checkbox("وقت القايلة (حر)")
     reason_details = f"تعارض: {conflict}, قايلة: {qaila}"
+elif target == "طلب إعفاء لغة إنجليزية":
+    with col1: sent_request = st.checkbox("قدمت طلب سابقاً ولم يحذف المقرر")
+    with col2: urgency = st.checkbox("باشروا في طلبي (عاجل)")
+    reason_details = f"قدمت طلب ولم يحذف: {sent_request}, استعجال: {urgency}"
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-mood = st.select_slider("🎭 أسلوب الدكتور/ة:", options=["رسمي جداً", "نظامي", "حبيب/ة"], value="نظامي")
+mood = st.select_slider("🎭 أسلوب الرسالة:", options=["رسمي جداً", "نظامي", "حبيب/ة"], value="نظامي")
 
 # 6. التشغيل
 if st.button("🚀 ولّد الإيميل الفزعة"):
     with st.spinner('جاري حبك الأعذار...'):
         try:
-            prompt = f"اكتب إيميل لـ {target}. التفاصيل: {reason_details}. أسلوب الدكتور: {mood}. اجعل النص لبقاً جداً ومختصراً بلهجة بيضاء مهذبة."
+            if target == "طلب إعفاء لغة إنجليزية":
+                prompt = f"اكتب رسالة موجهة لعمادة القبول والتسجيل بخصوص {target}. التفاصيل: {reason_details}. أسلوب الرسالة: {mood}. اطلب منهم مباشرة إجراءات الإعفاء وحذف المقرر لأن الطلب مقدم مسبقاً ولم يتم الحذف. بلهجة بيضاء محترمة."
+            else:
+                prompt = f"اكتب إيميل لـ {target}. التفاصيل: {reason_details}. أسلوب المتلقي: {mood}. بلهجة بيضاء محترمة."
+            
             res = model.generate_content(prompt)
             st.session_state['generated_email'] = res.text
         except Exception as e:
@@ -108,9 +125,9 @@ if 'generated_email' in st.session_state:
     st.markdown("---")
     if st.button("🧐 اسأل 'المُدقق الفزعة' عن نسبة القبول"):
         with st.spinner('المُدقق يراجع إيميلك بذكاء...'):
-            check_p = f"حلل هذا الإيميل: '{st.session_state['generated_email']}'. أعطني نسبة قبول الدكتور لهذا العذر من 100، واكتب نصيحة قصيمية سريعة جداً لصاحب الإيميل."
+            check_p = f"حلل هذا الإيميل: '{st.session_state['generated_email']}'. أعطني نسبة قبول العمادة لهذا الطلب من 100، واكتب نصيحة قصيمية سريعة جداً لصاحب الإيميل."
             analysis = model.generate_content(check_p)
             st.success(analysis.text)
             st.balloons()
 
-st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px;">By Eng Haneen 1/2 | GDG Qassim 🚀</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px;">تطوير المهندسة حنين 1/2 | GDG Qassim 🚀</div>', unsafe_allow_html=True)
