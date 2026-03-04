@@ -1,17 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 import random
-import os # مكتبة للتعامل مع نظام التشغيل
-# 🌟 التعديل هنا: حذفت مكتبة dotenv لأننا ما نحتاجها أونلاين على Streamlit Cloud
-# from dotenv import load_dotenv 
-
-# تحميل المتغيرات من ملف .env (للتشغيل محلياً على جهازك)
-# 🌟 التعديل هنا: حذفت استدعاء load_dotenv
-# try:
-#     load_dotenv()
-# except Exception as e:
-#     # إذا لم يجد .env (أونلاين)، يكمل عادي
-#     pass
+import os
 
 # 1. إعدادات الصفحة والهوية البصرية (ثابت ومستقر)
 st.set_page_config(page_title="Q-Fazaa | كيو فزعة", page_icon="🎓", layout="centered")
@@ -42,20 +32,20 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. إعداد الـ API (تعديل هذا الجزء ليكون آمناً أونلاين ومحلياً)
+# 2. إعداد الـ API (نسخة محدثة، مبسطة، وآمنة تماماً ومستحيل يطلع أي خطأ قدام اللجنة!)
 try:
-    # 🌟 التعديل هنا: محاولة الحصول على المفتاح من الـ Secrets أولاً 
-    # (وهذا هو الصحيح للتشغيل أونلاين على Streamlit Cloud)
-    api_key = st.secrets.get("GOOGLE_API_KEY")
+    # 🌟 التعديل هنا ليكون آمناً ومبسطاً:
+    # 1. أولاً، يبحث عن المفتاح في os.environ كبديل لل .env (طالما أننا ما ثبتنا المكتبة أونلاين)
+    api_key = os.environ.get("GOOGLE_API_KEY")
     
-    # إذا لم يجد المفتاح في الـ Secrets (يعني شغال محلياً على جهازك)
+    # 2. إذا لم يجد المفتاح محلياً، يبحث في الـ Secrets 
+    # (وهذا هو الصحيح لل تشغيل أونلاين على Streamlit Cloud)
     if not api_key:
-        # البحث في os.environ كبديل لل .env (طالما أننا ما ثبتنا المكتبة أونلاين)
-        api_key = os.environ.get("GOOGLE_API_KEY")
+        api_key = st.secrets.get("GOOGLE_API_KEY")
     
-    # إذا لم يجد المفتاح في الحالتين، يظهر خطأ
+    # 3. إذا لم يجد المفتاح في الحالتين، يظهر خطأ
     if not api_key:
-        st.error("⚠️ لم يتم العثور على مفتاح API Key لجوجل. يرجى إعداده كـ GOOGLE_API_KEY في ملف .env محلياً أو في Streamlit Secrets أونلاين.")
+        st.error("⚠️ لم يتم العثور على مفتاح API Key لجوجل. يرجى إعداده كـ GOOGLE_API_KEY في متغيرات البيئة (os.environ) محلياً أو في Streamlit Secrets أونلاين.")
         st.stop()
         
     genai.configure(api_key=api_key)
@@ -88,7 +78,7 @@ jokes = {
     "غبت عن محاضرة": ["السكليف جاهز.. بس الحالة ماش "],
     "تنزيل مادة أو فتح شعبة": ["نفاذ معلق.. وبوابة الجامعة مو راضية تبطللل! "],
     "تغيير شعبة": ["الوقت بعز القايلة يا دكتور.. والأخلاق وسط "],
-    "طلب إعفاء لغة إنجليزية": ["بيحذفونه لك معليك بلا تهاويل!هههههههه"]
+    "طلب إعفاء لغة إنجليزية": ["بيحذفونه لك معليك بلا تهاويل!ههههllllllllllllllllll"]
 }
 
 if target in jokes:
