@@ -1,11 +1,16 @@
 import streamlit as st
 import google.generativeai as genai
 import random
+import os # مكتبة للتعامل مع نظام التشغيل
+from dotenv import load_dotenv # مكتبة لتحميل المتغيرات من ملف .env
 
-# 1. إعدادات الصفحة والهوية البصرية
+# تحميل المتغيرات من ملف .env (للتشغيل محلياً)
+load_dotenv()
+
+# 1. إعدادات الصفحة والهوية البصرية (ثابت ومستقر)
 st.set_page_config(page_title="Q-Fazaa | كيو فزعة", page_icon="🎓", layout="centered")
 
-# CSS المتقدم (ثابت ومستقر)
+# CSS المتقدم لتنسيق الصفحة (ثابت ومستقر)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
@@ -31,20 +36,31 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. إعداد الـ API (ثابت ومستقر)
+# 2. إعداد الـ API (تعديل هذا الجزء ليكون آمناً محلياً وأونلاين)
 try:
+    # محاولة الحصول على المفتاح من الـ Secrets أولاً (للتشغيل أونلاين على Streamlit Cloud)
     api_key = st.secrets.get("GOOGLE_API_KEY")
+    
+    # إذا لم يجد المفتاح في الـ Secrets، يحاول قراءته من ملف الـ .env (للتشغيل محلياً على جهازك)
+    if not api_key:
+        api_key = os.environ.get("GOOGLE_API_KEY")
+    
+    # إذا لم يجد المفتاح في الحالتين، يظهر خطأ
+    if not api_key:
+        st.error("⚠️ لم يتم العثور على مفتاح API Key لجوجل. يرجى إعداده كـ GOOGLE_API_KEY في ملف .env محلياً أو في Streamlit Secrets أونلاين.")
+        st.stop()
+        
     genai.configure(api_key=api_key)
-    # استخدام موديل Gemini 1.5 Flash للسرعة والدقة (تم تحديث الموديل لنسخة مستقرة)
+    # استخدام موديل Gemini 1.5 Flash للسرعة والدقة (النسخة المستقرة)
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-    st.error(f"⚠️ تأكدي من إعداد الـ API Key في الـ Secrets. الخطأ: {e}")
+    st.error(f"⚠️ حدث خطأ غير متوقع أثناء إعداد الـ API: {e}")
     st.stop()
 
-# 3. الهيدر (تم تحديث الشعار)
+# 3. الهيدر (ثابت)
 st.markdown('<div class="main-header"><h1>🎓 كيو فزعة | Q-Fazaa</h1><p>فزعتك بيدك.. وإيميلك بثواني يجيك ⚡</p></div>', unsafe_allow_html=True)
 
-# 4. الأهداف (ثابت ومستقر)
+# 4. الأهداف (ثابت)
 target_options = [
     "طلب بونص درجات", 
     "تحويل المحاضرة أونلاين", 
@@ -56,7 +72,7 @@ target_options = [
 ]
 target = st.selectbox("🎯 وش هدفك من الإيميل؟", target_options)
 
-# قاموس الذبات (تم تحديث ذبة الإعفاء وذبة تأخر الباص)
+# قاموس الذبات (تم تحديث ذبة الإعفاء وذبة تأخر الباص وتنزيل المادة)
 jokes = {
     "طلب بونص درجات": ["تكفى يا دكتوور.. بمسك عيالك بس عطني هالعشر درجات هههههه"],
     "تحويل المحاضرة أونلاين": ["طريق المليداء اليوم يبي له طيارة مب سيارة.. خلوها عن بعد!"],
@@ -70,7 +86,7 @@ jokes = {
 if target in jokes:
     st.markdown(f'<div class="joke-box">💡 {random.choice(jokes[target])}</div>', unsafe_allow_html=True)
 
-# 5. منطقة التفاصيل (ثابت ومستقر)
+# 5. منطقة التفاصيل (ثابت)
 st.markdown('<div class="option-card">', unsafe_allow_html=True)
 st.write("🔍 **حدد تفاصيل عذرك:**")
 reason_details = ""
@@ -109,11 +125,11 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 mood = st.select_slider("🎭 أسلوب الرسالة:", options=["رسمي جداً", "نظامي", "حبيب/ة"], value="نظامي")
 
-# 6. التشغيل (تم استخدام البرومبتات الأفضل والأكثر احترافية)
+# 6. التشغيل
 if st.button("🚀 ولّد الإيميل الفزعة"):
     with st.spinner('جاري حبك الأعذار باحترافية...'):
         try:
-            # 🌟 برومبت "إيجنت الكاتب" الأفضل والمطور (المحسن)
+            # 🌟 البرومبتات الاحترافية والمطورة (المحسن)
             # تم دمج هيكلة متقدمة (Chain of Thought, Prompt Engineering)
             if target == "طلب إعفاء لغة إنجليزية":
                 # برومبت مخصص لعمادة القبول والتسجيل
@@ -175,21 +191,21 @@ if st.button("🚀 ولّد الإيميل الفزعة"):
         except Exception as e:
             st.error(f"حدث خطأ في توليد الإيميل: {e}")
 
-# عرض الإيميل المُولد (ثابت ومستقر)
+# عرض الإيميل المُولد (ثابت والمستقر)
 if 'generated_email' in st.session_state:
     st.markdown("---")
     st.subheader("📬 إيميلك الجاهز:")
     st.info(st.session_state['generated_email'])
     
-    # زر التحميل (ثابت ومستقر)
+    # زر التحميل (ثابت والمستقر)
     st.download_button(label="📥 تحميل الإيميل (نص)", data=st.session_state['generated_email'], file_name="fazaa_email.txt", mime="text/plain")
     
     st.markdown("---")
-    # 7. المُدقق الفزعة (تم استبدال البرومبت بالبرومبت الأفضل والأكثر احترافية)
+    # 7. المُدقق الفزعة
     if st.button("🧐 اسأل 'المُدقق الفزعة' عن نسبة القبول"):
         with st.spinner('المُدقق يراجع إيميلك باحترافية قصيمية...'):
             try:
-                # 🌟 برومبت "إيجنت المُدقق" الأفضل والمطور (المحسن)
+                # البرومبت الاحترافي والمطور للمدقق (المحسن)
                 # تم دمج هيكلة متقدمة (Chain of Thought, Prompt Engineering)
                 check_p = f"""
 أنت الآن "خبير تحليل خطابات أكاديمية وفزعة قصيمية محترف". مهمتك هي تحليل الإيميل التالي الذي كتبه طالب لـ "{target}" بناءً على عذر "{reason_details}"، وتقديم تقييم تحليلي دقيق.
@@ -218,5 +234,5 @@ if 'generated_email' in st.session_state:
             except Exception as e:
                 st.error(f"حدث خطأ في المُدقق: {e}")
 
-# الفوتر (ثابت ومستقر)
+# الفوتر والتوقيع (ثابت والمستقر)
 st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px; font-family: \'Courier New\', Courier, monospace;"> GDG Qassim 🚀 - By Eng Haneen</div>', unsafe_allow_html=True)
