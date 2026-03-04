@@ -49,6 +49,7 @@ target_options = [
 target = st.selectbox("🎯 وش هدفك من الإيميل؟", target_options)
 
 # قاموس الذبات (تمت إضافة ذبة زها)
+
 jokes = {
     "طلب بونص درجات": ["تكفى يا دكتور.. بمسك عيالك بس عطني هالعشر درجات هههههه"],
     "تحويل المحاضرة أونلاين": ["طريق المليداء اليوم يبي له سباحة مو سيارة.. خلوها عن بعد!"],
@@ -56,8 +57,9 @@ jokes = {
     "غبت عن محاضرة": ["السكليف جاهز.. بس الأخلاق تبي بونص غياب"],
     "تنزيل مادة أو فتح شعبة": ["نفاذ معلق.. وبوابة الجامعة تذكرني بأيام الحصن"],
     "تغيير شعبة": ["الوقت بعز القايلة يا دكتور.. والمخيخ يفصل عندي هههههه"],
-    "طلب إعفاء لغة إنجليزية": ["بيحذفونه لك يا زها لا تخافين مانبي تهاويل! هههههههه"]
+    "طلب إعفاء لغة إنجليزية": ["بيحذفونه لك إن شاء الله.. بلا تهاويل! هههههههه"]
 }
+
 
 if target in jokes:
     st.markdown(f'<div class="joke-box">💡 {random.choice(jokes[target])}</div>', unsafe_allow_html=True)
@@ -131,3 +133,7 @@ if 'generated_email' in st.session_state:
             st.balloons()
 
 st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px;">تطوير المهندسة حنين 1/2 | GDG Qassim 🚀</div>', unsafe_allow_html=True)
+            st.balloons()
+
+st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px;">تطوير المهندسة حنين 1/2 | GDG Qassim 🚀</div>', unsafe_allow_html=True)
+
