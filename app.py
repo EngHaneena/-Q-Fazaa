@@ -2,10 +2,16 @@ import streamlit as st
 import google.generativeai as genai
 import random
 import os # مكتبة للتعامل مع نظام التشغيل
-from dotenv import load_dotenv # مكتبة لتحميل المتغيرات من ملف .env
+# 🌟 التعديل هنا: حذفت مكتبة dotenv لأننا ما نحتاجها أونلاين على Streamlit Cloud
+# from dotenv import load_dotenv 
 
-# تحميل المتغيرات من ملف .env (للتشغيل محلياً)
-load_dotenv()
+# تحميل المتغيرات من ملف .env (للتشغيل محلياً على جهازك)
+# 🌟 التعديل هنا: حذفت استدعاء load_dotenv
+# try:
+#     load_dotenv()
+# except Exception as e:
+#     # إذا لم يجد .env (أونلاين)، يكمل عادي
+#     pass
 
 # 1. إعدادات الصفحة والهوية البصرية (ثابت ومستقر)
 st.set_page_config(page_title="Q-Fazaa | كيو فزعة", page_icon="🎓", layout="centered")
@@ -36,16 +42,16 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. إعداد الـ API (تعديل هذا الجزء ليكون آمناً محلياً وأونلاين)
-# 2. إعداد الـ API (نسخة محدثة ومبسطة للتشغيل المحلي والآمن)
+# 2. إعداد الـ API (تعديل هذا الجزء ليكون آمناً أونلاين ومحلياً)
 try:
-    # 🌟 التعديل هنا: محاولة تحميل من .env أولاً للتشغيل المحلي
-    # وإذا لم يجده (أونلاين)، يبحث في Secrets
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    # 🌟 التعديل هنا: محاولة الحصول على المفتاح من الـ Secrets أولاً 
+    # (وهذا هو الصحيح للتشغيل أونلاين على Streamlit Cloud)
+    api_key = st.secrets.get("GOOGLE_API_KEY")
     
+    # إذا لم يجد المفتاح في الـ Secrets (يعني شغال محلياً على جهازك)
     if not api_key:
-        # البحث في Secrets (لل تشغيل أونلاين على Streamlit Cloud)
-        api_key = st.secrets.get("GOOGLE_API_KEY")
+        # البحث في os.environ كبديل لل .env (طالما أننا ما ثبتنا المكتبة أونلاين)
+        api_key = os.environ.get("GOOGLE_API_KEY")
     
     # إذا لم يجد المفتاح في الحالتين، يظهر خطأ
     if not api_key:
@@ -238,4 +244,3 @@ if 'generated_email' in st.session_state:
 
 # الفوتر والتوقيع (ثابت والمستقر)
 st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px; font-family: \'Courier New\', Courier, monospace;"> GDG Qassim 🚀 - By Eng Haneen</div>', unsafe_allow_html=True)
-
