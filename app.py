@@ -113,4 +113,4 @@ if 'generated_email' in st.session_state:
             st.success(analysis.text)
             st.balloons()
 
-st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px;">تطوير المهندسة حنين 1/2 | GDG Qassim 🚀</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="text-align:center; color:#888; margin-top:50px;">By Eng Haneen 1/2 | GDG Qassim 🚀</div>', unsafe_allow_html=True)
